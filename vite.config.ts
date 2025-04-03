@@ -4,6 +4,7 @@ import { viteMockServe } from "vite-plugin-mock";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/ag-grid-demo/',
   plugins: [
     react(),
     viteMockServe({
