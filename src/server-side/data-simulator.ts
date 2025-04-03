@@ -23,11 +23,11 @@ export interface ResponseData {
   parentId?: string;
 }
 
-const localApi = 'http://ag-grid-server.ip2fw-ms.prd.gantcloud.com/getRows';
-// const mockApi = '/api/getRows';
+// const localApi = 'http://ag-grid-server.ip2fw-ms.prd.gantcloud.com/getRows';
+const mockApi = '/api/getRows';
 
 export const mockAPI = (params: IServerSideGetRowsRequest) => {
-  return fetch(localApi, {
+  return fetch(mockApi, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
