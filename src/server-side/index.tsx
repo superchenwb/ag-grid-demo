@@ -6,6 +6,7 @@ import {
     GridApi,
     GridReadyEvent,
   IServerSideDatasource,
+  IServerSideGetRowsParams,
   ModuleRegistry,
   ValidationModule,
 } from "ag-grid-community";
@@ -18,7 +19,7 @@ import {
   TreeDataModule,
   RowApiModule,
 } from "ag-grid-enterprise";
-import { mockAPI, ResponseData } from "./data-simulator";
+import { mockAPI, ResponseData, TreeNode } from "./data-simulator";
 ModuleRegistry.registerModules([
   ColumnsToolPanelModule,
   ColumnMenuModule,
@@ -30,9 +31,9 @@ ModuleRegistry.registerModules([
   ValidationModule /* Development Only */,
 ]);
 
-const deepApply = (params: any, result: ResponseData) => {
+const deepApply = (params: IServerSideGetRowsParams, result: ResponseData) => {
   const request = params.request;
-  result?.rowData?.forEach((item: any) => {
+  result?.rowData?.forEach((item: TreeNode) => {
     const children = item.children;
     item.children = null;
     if (children && item.tempId) {
@@ -123,27 +124,23 @@ export const GridExample = () => {
       minWidth: 300,
     };
   }, []);
-  const isServerSideGroupOpenByDefault = useCallback((params: any) => {
+  const isServerSideGroupOpenByDefault = useCallback(() => {
     // open first two levels by default
     return true;
   }, []);
-  const isServerSideGroup = useCallback((dataItem: any) => {
+  const isServerSideGroup = useCallback((dataItem: TreeNode) => {
     // indicate if node is a group
     return !dataItem.leaf;
   }, []);
-  const getServerSideGroupKey = useCallback((dataItem: any) => {
+  const getServerSideGroupKey = useCallback((dataItem: TreeNode) => {
     // specify which group key to use
     return dataItem.tempId;
   }, []);
   const serverSideDatasource = createServerSideDatasource();
-  const apiRef = useRef<GridApi<any>>();
+  const apiRef = useRef<GridApi>(null);
   const onGridReady = (params: GridReadyEvent) => {
     apiRef.current = params.api;
   };
-
-  function handleCount() {
-    console.log(apiRef.current?.getDisplayedRowCount());
-  }
 
   return (
     <div style={containerStyle}>
